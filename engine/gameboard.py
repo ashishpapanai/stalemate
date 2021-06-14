@@ -94,3 +94,23 @@ class GameBoard():
         print("castle:" + line)
         print("key:" + self.posKey.toString(16))
 
+
+    def GeneratePosKey(self):
+        sq = 0
+        finalKey = 0
+        piece = self.definitions.PIECES['EMPTY']
+
+        for sq in range(0, self.definitions.BRD_SQ_NUM+1):
+            piece = self.pieces[sq]
+            if piece != self.definitions.PIECES['EMPTY'] and piece != self.definitions.SQUARES['OFFBOARD']:
+                finalKey ^= self.definitions.PieceKeys[(piece * 120) + sq]
+            
+        if self.side == self.definitions.COLOURS['WHITE']: 
+            finalKey ^= self.definitions.SideKey
+        
+        if self.enPas != self.definitions.SQUARES['NO_SQ']:
+            finalKey ^= self.definitions.PieceKeys[self.enPas]
+        
+        finalKey ^= self.definitions.CastleKeys[self.castlePerm]
+
+        return finalKey
